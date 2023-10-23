@@ -1,0 +1,33 @@
+.card{
+    margin: 15px;
+    width: 400px;
+    height: 205px;
+}
+
+time{
+color: cadetblue;
+}
+
+.card-header-title{
+    background-color:rgb(161, 198, 226)
+}
+
+.card-footer-item{
+    margin: 10px;
+
+    &.button{
+        &.is-info{
+            &.is-outlined{
+                margin-right: 20px;
+            }
+        }
+
+        &.is-danger{
+            &.is-outlined{
+                margin-left: 20px;
+            }
+    }  
+    
+    } 
+    
+}
