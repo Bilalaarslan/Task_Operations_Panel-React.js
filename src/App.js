@@ -1,12 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import TaskCreate from "./components/TaskCreate";
 import TaskList from "./components/TaskList";
+import axios from "axios";
+import { taskUrl } from "./services/apiUrls";
 
 function App() {
   const [tasks, setTasks] = useState([]);
 
-  const deleteTaskById = (id) => {
+  
+  const deleteTaskById = async (id) => {
+    axios.delete(`${taskUrl}/${id}`);
     const afterDeletingTasks = tasks.filter((task) => {
       return task.id !== id;
     });
@@ -14,23 +18,34 @@ function App() {
     setTasks(afterDeletingTasks);
   };
 
-  const createTask = (title, taskDescription) => {
-    const createdTask = [
-      ...tasks,
-      {
-        id: Math.round(Math.random() * 999999),
-        title,
-        taskDescription,
-      },
-    ];
+  const createTask = async (title, taskDescription) => {
+    const response = await axios.post(taskUrl, { title, taskDescription });
+    const createdTask = [...tasks, response.data];
     setTasks(createdTask);
   };
 
+  const fetchTasks = async () => {
+    const response = await axios.get(taskUrl);
+    setTasks(response.data);
+  };
+
+  useEffect(() => {
+    fetchTasks();
+  });
+
+
   const editTaskById = (id, updatedtitle, updatedTaskDescription) => {
+    axios.put(`${taskUrl}/${id}`,{
+      title:updatedtitle,
+      taskDescription:updatedTaskDescription
+    });
     const updatedTasks = tasks.map((task) => {
-      if(task.id===id)
-      {
-        return {id, title:updatedtitle, taskDescription:updatedTaskDescription}
+      if (task.id === id) {
+        return {
+          id,
+          title: updatedtitle,
+          taskDescription: updatedTaskDescription,
+        };
       }
       return task;
     });
